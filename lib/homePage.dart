@@ -1,16 +1,16 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import './http.dart';
 import 'package:provider/provider.dart';
 
-class HomeProvider extends StatelessWidget {
+import './http.dart';
+
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final dataProvider = Provider.of<Http>(context, listen: false);
+    final dataProvider = Provider.of<HttpProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text("GET - PROVIDER"),
+        title: Text("DELETE - HTTP"),
       ),
       body: Container(
         width: double.infinity,
@@ -23,7 +23,7 @@ class HomeProvider extends StatelessWidget {
               child: Container(
                 height: 100,
                 width: 100,
-                child: Consumer<Http>(
+                child: Consumer<HttpProvider>(
                   builder: (context, value, child) => Image.network(
                     (value.data["avatar"] == null)
                         ? "https://www.uclg-planning.org/sites/default/files/styles/featured_home_left/public/no-user-image-square.jpg?itok=PANMBJF-"
@@ -35,7 +35,7 @@ class HomeProvider extends StatelessWidget {
             ),
             SizedBox(height: 20),
             FittedBox(
-              child: Consumer<Http>(
+              child: Consumer<HttpProvider>(
                 builder: (context, value, child) => Text(
                   (value.data["id"] == null)
                       ? "ID : Belum ada data"
@@ -47,7 +47,7 @@ class HomeProvider extends StatelessWidget {
             SizedBox(height: 20),
             FittedBox(child: Text("Name : ", style: TextStyle(fontSize: 20))),
             FittedBox(
-              child: Consumer<Http>(
+              child: Consumer<HttpProvider>(
                 builder: (context, value, child) => Text(
                   (value.data["first_name"] == null ||
                           value.data["last_name"] == null)
@@ -62,7 +62,7 @@ class HomeProvider extends StatelessWidget {
             SizedBox(height: 20),
             FittedBox(child: Text("Email : ", style: TextStyle(fontSize: 20))),
             FittedBox(
-              child: Consumer<Http>(
+              child: Consumer<HttpProvider>(
                 builder: (context, value, child) => Text(
                   (value.data["email"] == null)
                       ? "Belum ada data"
@@ -74,7 +74,10 @@ class HomeProvider extends StatelessWidget {
             SizedBox(height: 100),
             OutlinedButton(
               onPressed: () {
-                dataProvider.connectAPI((1 + Random().nextInt(10)).toString());
+                dataProvider.connectAPI(
+                  (1 + Random().nextInt(10)).toString(),
+                  context,
+                );
               },
               child: Text(
                 "GET DATA",
@@ -85,6 +88,12 @@ class HomeProvider extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          dataProvider.deleteData(context);
+        },
+        child: Icon(Icons.delete),
       ),
     );
   }
